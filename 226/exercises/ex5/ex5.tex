@@ -1,0 +1,50 @@
+\documentclass[12pt, b5paper]{article}
+\setlength{\topmargin}{-.5in}
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{9.5in}
+\setlength{\oddsidemargin}{-.25in}
+
+\usepackage{amsmath}
+
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+
+\pagestyle{empty}
+\begin{document}
+
+\begin{center}
+{\bf CSC 226
+Exercise 3}\\
+An Nguyen, V01073373\\
+22 Feb 2026
+\end{center}
+
+\section*{Problem:}
+Prove the theorem: Let G be a connected edge-weighted undirected graph with distinct edge weights, 
+and let C be some cycle in G. Then the maximum-weight edge e in C is not contained in the 
+minimum weight spanning tree of G.
+
+\section*{Proof:}
+We will prove the theorem by contradiction. We know that in a connected graph G, where all edge weights are distinct, there is 
+a unique minimum weight spanning tree (MWST). If an edge satisfies to be the minimum 
+weight bridge for a specific cut, it must be in that unique tree.
+\subsubsection*{Claim:} 
+Let C be a cycle in G, and let e be the maximum-weight edge in that cycle. 
+We want to prove that e is not in the MWST.
+\subsubsection*{Assumption:} 
+Suppose, for the purpose of contradiction, e is in the MWST. Deleting any edge from a spanning tree disconnects it into exactly 
+two connected components, which we can call S and V - S. By deleting e from our assumed tree, 
+we create such a partition, or a cut, in the graph.
+Since e was in the cycle C, there must be another edge f in C that connects S and V - S so that the
+cycle can cross the cut at e and go through the cut again at f.\\
+\newline
+From the assumption, we have that e is the maximum-weight edge in C. Since all edge weights in G
+ are distinct, any other edge in C, including f, must have a weight less than that of e.\\
+\newline
+By the Cut Property, for any partition of a graph, the minimum weight edge crossing 
+the cut must be in the MWST. In our case S and V - S form a cut, and we have edge f 
+crossing the cut with weight less than that of e. Therefore, edge f must be in the MWST. Since 
+we also assumed that e is in the MWST, we have a contradiction: a spanning tree cannot contain a cycle.
+\subsubsection*{Conclusion:}
+Thus, our assumption that e is in the MWST must be false. Therefore, the maximum-weight edge e 
+in cycle C is not contained in the minimum weight spanning tree of G.\\
+\end{document}

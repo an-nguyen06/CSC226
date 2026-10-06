@@ -1,0 +1,34 @@
+\documentclass[12pt, b5paper]{article}
+\setlength{\topmargin}{-.5in}
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{9.5in}
+\setlength{\oddsidemargin}{-.25in}
+
+\usepackage{amsmath}
+
+\pagestyle{empty}
+\begin{document}
+
+\begin{center}
+{\bf CSC 226
+Exercise 4}\\
+An Nguyen, V01073373\\
+8 Feb 2026
+\end{center}
+\subsection*{Idea:}
+Think of each set as a connected component of an undirected graph like 
+in the \textbf{Connected Components} motivation for disjoint sets.
+We can store the graph on vertices $0, 1, ..., n-1$ using an adjacency matrix $A_{n \times n}$ (i.e., $A[i][j] = 1$ if there is an edge between vertices $i$ and $j$, and $A[i][j] = 0$ otherwise).
+\subsection*{Union:}
+To perform Union(x, y), we simply set A[$x$][$y$] = 1 and $A[y][x]$ = 1 in constant time. This is obtained from the observation that when a new edge \textit{uv} is added to the graph,
+either $u$ and $v$ are in the said component, or the components containing $u$ and $v$ will be merged into a single component
+once the edge $uv$ is added. Therefore, the Union operation can be implemented in worst-case constant time.
+\subsection*{Find:}
+We know that Find($x$) returns the designated representative of the set containing $x$. Here, the set containing $x$ is the connected component of the graph that contains vertex $x$. 
+To find the representative of this set, we can perform a breadth-first search (BFS) or depth-first search (DFS) starting from vertex $x$ to find all vertices in the same connected component. 
+We can then return the smallest vertex in this component as the representative. Since we may need to visit all vertices, the running time of Find($x$) is $O(n^2)$ in the worst 
+case, because with an adjacency matrix we must scan $n$ entries to find the neighbors of each of up to $n$ visited vertices, where $n$ is the number of elements in the set. This running time depends only on $n$ and not on any other parameter, such as the number of Union operations performed so far.
+\subsection*{Thus,}
+Union($x$, $y$) takes $O(1)$ worst-case time.
+Find($x$) takes $O(n^2)$ worst-case time.
+\end{document}

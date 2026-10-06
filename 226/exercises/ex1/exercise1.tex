@@ -1,0 +1,145 @@
+
+\documentclass[12pt, b5paper]{article}
+\setlength{\topmargin}{-.5in}
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{9.5in}
+\setlength{\oddsidemargin}{-.25in}
+
+\usepackage{amsmath}
+
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+
+\pagestyle{empty}
+\begin{document}
+
+\begin{center}
+{\bf CSC 226
+Exercise 1}\\
+An Nguyen, V01073373\\
+17 Jan 2026
+\end{center}
+
+\section*{Problem:}
+Consider the recurrence T(n) below, which is defined for all integers $n \geq 0$.
+
+$$
+T(n) = 
+\begin{cases}
+    1 & \text{if } n = 0 \text{ or } n = 1 \\
+    T(n-1) + 2T(n-2) & \text{if } n \geq 2
+\end{cases}
+$$
+Prove that $T(n) \leq 2^n$ for all $n \geq 0$.
+
+\section*{Proof:}
+
+\textbf{Idea: }
+We solve the recurrence relation using proof by \textbf{strong induction} on $n$. \\
+\newline
+\textbf{Base Cases: }
+\begin{align*}
+\text{For } n = 0: \quad T(0) &= 1 = 2^0 = 1 \\
+\text{For } n = 1: \quad T(1) &= 1 < 2^1 = 2
+\end{align*}
+Therefore, our base cases hold. \\
+\newline
+\textbf{Induction Hypothesis: }
+Suppose that $T(j) \leq 2^j$ for all $0 \leq j \leq k$, where $k \geq 1$.\\
+\newline
+\textbf{Induction Step: } \\
+We must show that the statement holds for $n = k + 1$: 
+$$T(k+1) \leq 2^{k+1}$$
+Using the recurrence relation, we have:
+\begin{align*}
+T(k+1) &= T(k) + 2T(k-1) \\
+&\leq 2^k + 2 \cdot 2^{k-1}
+= 2^k + 2^k = 2 \cdot 2^k = 2^{k+1}  \text{ (by I.H.)} 
+\end{align*}
+\textbf{Conclusion: } \\
+Therefore, by induction, the claim holds for all $n \geq 0$.
+
+\newpage
+\begin{center}
+{\bf CSC 226
+Exercise 2}\\
+An Nguyen, V01073373\\
+24 Jan 2026
+\end{center}
+
+\section*{Problem:}
+We have seen that the Quickselect algorithm has worst-case $\theta(n)$ performance if pivots are 
+selected with the BFPRT pivot selection scheme using sub-arrays of size $5$. Prove that Quickselect 
+has worst-case $\theta(n)$ performance if pivots are selected with the BFPRT pivot selection scheme 
+using sub-arrays of size $7$.
+\section*{Proof:}
+\subsection*{Idea: }
+We'll compute the largest size of the two partitions created by using BFPRT algorithm with sub-arrays of size $7$. 
+Then, we'll set up the recurrence relation for Quickselect and solve it using induction on $n$. 
+\subsection*{Calculating the size of the partitions: }
+For an array of size n, we have $\floor{\frac{n}{7}}$ sub-arrays of size $7$ (ignore the 
+remaining elements). After the partitioning is complete, each sub-array is sorted in $\theta(1)$ time 
+since the size is constant. Since the sub-array size is odd, each sub-array will have a median 
+after sorting.\\
+\newline
+We find the median of each sub-array, which gives us $\frac{n}{7}$ medians. The time taken to sort 
+all sub-arrays and find their medians is $\theta(n)$. Suppose we arrange the sub-arrays in 
+non-decreasing order based on their medians. Let $p$ be the median of the middle sub-array. This value 
+is the median of the sequence of medians, so we call it \textbf{median of medians}. \\
+\newline
+Since there are $\frac{n}{7}$ sub-arrays, $p$ is greater than the $\floor{\frac{n}{14}}$ medians and 
+less than the $\floor{\frac{n}{14}}$ medians. Each median is greater than $3$ elements in its sub-array 
+and less than $3$ elements in its sub-array, so:
+$$|L| \geq \frac{n}{14} \times 4 = \frac{4n}{14}$$
+$$|G| \geq \frac{n}{14} \times 4 = \frac{4n}{14}$$\\
+($L$ is the set of elements $\leq p$, and $G$ is the set of elements $\geq p$.) \\
+\newline
+Since $|L| + |G| + 1 = n$, the size of the largest partition is at most:
+$$n - \frac{4n}{14} = \frac{10n}{14} = \frac{5n}{7}$$
+Therefore, recursing on the largest partition takes at most $T\left(\frac{5n}{7}\right)$ time. \\
+\newline
+Computing the sequence of sub-array medians take $\theta(n)$ time, and finding $p$ takes a recursive 
+call to Quickselect on the sequence of
+$\frac{n}{7}$ medians, which takes $T\left(\frac{n}{7}\right)$ time.
+\subsection*{Recurrence:}
+The overall running time of Quickselect with BFPRT pivoting can be modelled by the recurrence:
+$$
+T(n) = 
+\begin{cases}
+    c_b & \text{if } n \leq 1 \\
+    T\left(\floor{\frac{5n}{7}}\right) + T\left(\floor{\frac{n}{7}}\right) + c_1n + c_2 & \text{if } n \geq 2
+\end{cases}
+$$
+Notice that $\frac{5n}{7} + \frac{n}{7} = \frac{6n}{7} < n$ , so the size of the subproblems decreases 
+geometrically. \\
+Let $c=c_b + c_1 + c_2$ and note that since $c_{1}n + c_{2}n$ for $n\geq 2$, the simplified recurrence below is 
+always greate than $T(n)$:
+$$
+T'(n) = 
+\begin{cases}
+    c & \text{if } n \leq 1 \\
+    T'\left(\lfloor \frac{5n}{7} \rfloor\right) + T'\left(\lfloor\frac{n}{7}\rfloor\right) + cn & \text{if } n \geq 2
+\end{cases}
+$$
+\newline
+\textbf{Claim: } $T'(n) \leq 7cn$ for $n \geq 1$. \\
+\newline
+\textbf{Proof: } By induction on $n$. \\
+\newline
+\textbf{Base Case: }
+When $n=1$, $T'(1) = c = cn \leq 7cn$. So the claim holds. \\
+\newline
+\textbf{Induction Hypothesis: }
+Suppose $T'(n) \leq 7cn$ for $n \in {1, 2, ..., k}$ for some $k \geq 1$. \\
+\newline
+\textbf{Induction Step: }
+Consider $T'(n + 1)$:
+\begin{align*}  
+T'(n+1) &= T'\left(\floor{\frac{5(n+1)}{7}}\right) + T'\left(\floor{\frac{n+1}{7}}\right) + c(n+1) \\
+&\leq 7c \cdot \left(\floor{\frac{5(n+1)}{7}}\right) + 7c \cdot \left(\floor{\frac{n+1}{7}}\right) + c(n+1) \text{ (by I.H.)} \\
+&\leq 7c \cdot \left(\frac{5(n+1)}{7}\right) + 7c \cdot \left(\frac{n+1}{7}\right) + c(n+1) \\
+&\leq 5c(n+1) + c(n+1) + c(n+1) \\
+&= 7cn
+\end{align*}
+Therefore, the claim holds for $n+1$ and, by induction, the claim holds for all $n\geq1$.
+
+\end{document}

@@ -1,0 +1,163 @@
+---
+title: "csc226-Rcode"
+format: pdf
+editor: visual
+---
+
+```{r}
+# Load factors
+alpha <- c(0.7,0.75,0.8,0.85,0.9)
+
+# Chaining = 1 + alpha
+chaining <- 1 + alpha
+
+# Linear probing (successful)
+lp_success <- 0.5 * (1 + 1/(1 - alpha))
+
+# Linear probing (unsuccessful)
+lp_unsuccess <- 0.5 * (1 + 1/((1 - alpha)^2))
+
+# Create data frame
+data <- data.frame(alpha, chaining, lp_success, lp_unsuccess)
+
+data
+```
+
+```{r}
+plot(alpha, chaining, type="o", pch=16, col="blue",
+     ylim=c(0, max(lp_unsuccess)),
+     xlab=expression(alpha),
+     ylab="Expected Number of Probes",
+     main="Expected Runtime vs Load Factor")
+
+lines(alpha, lp_success, type="o", pch=16, col="darkgreen")
+lines(alpha, lp_unsuccess, type="o", pch=16, col="red")
+
+legend("topleft",
+       legend=c("Chaining",
+                "Linear Probing (Successful)",
+                "Linear Probing (Unsuccessful)"),
+       col=c("blue", "darkgreen", "red"),
+       lty=1, pch=16)
+```
+
+```{r}
+# Read data
+chaining <- read.csv("C:/Users/vuthu/OneDrive/Desktop/spring 2026/CSC226/assignment-notes/exercises/assignment1/chaining_results.csv")
+
+linear <- read.csv("C:/Users/vuthu/OneDrive/Desktop/spring 2026/CSC226/assignment-notes/exercises/assignment1/linear_probing_results.csv")
+```
+
+```{r}
+plot(chaining$Load.Factor,
+     chaining$Avg.Probes.Unsuccessful.Search,
+     type="b",
+     col="blue",
+     pch=16,
+     xlab="Load Factor (alpha)",
+     ylab="Average Probes",
+     main="Unsuccessful Search: Chaining vs Linear Probing")
+
+lines(linear$Load.Factor,
+      linear$Avg.Probes.Unsuccessful.Search,
+      type="b",
+      col="red",
+      pch=17)
+
+legend("topleft",
+       legend=c("Chaining","Linear Probing"),
+       col=c("blue","red"),
+       pch=c(16,17))
+```
+
+```{r}
+plot(chaining$Load.Factor,
+     chaining$Avg.Probes.Successful.Search,
+     type="b",
+     col="blue",
+     pch=16,
+     xlab="Load Factor (alpha)",
+     ylab="Average Probes",
+     main="Successful Search: Chaining vs Linear Probing")
+
+lines(linear$Load.Factor,
+      linear$Avg.Probes.Successful.Search,
+      type="b",
+      col="red",
+      pch=17)
+
+legend("topleft",
+       legend=c("Chaining","Linear Probing"),
+       col=c("blue","red"),
+       pch=c(16,17))
+
+```
+
+```{r}
+plot(chaining$Load.Factor,
+     chaining$Time.Unsuccessful.Search,
+     type="b",
+     col="blue",
+     pch=16,
+     xlab="Load Factor (alpha)",
+     ylab="Time (seconds)",
+     main="Runtime (Unsuccessful): Chaining vs Linear Probing")
+
+lines(linear$Load.Factor,
+      linear$Time.Unsuccessful.Search,
+      type="b",
+      col="red",
+      pch=17)
+
+legend("topleft",
+       legend=c("Chaining","Linear Probing"),
+       col=c("blue","red"),
+       pch=c(16,17))
+```
+
+```{r}
+library(ggplot2)
+
+# Add method labels
+chaining$Method <- "Chaining"
+linear$Method <- "Linear Probing"
+
+# Combine into one dataframe
+data <- rbind(chaining, linear)
+```
+
+```{r}
+ggplot(data, aes(x=Load.Factor,
+                 y=Avg.Probes.Unsuccessful.Search,
+                 color=Method)) +
+  geom_line() +
+  geom_point() +
+  labs(title="Unsuccessful Search Performance",
+       x="Load Factor (alpha)",
+       y="Average Probes") +
+  theme_minimal()
+```
+
+```{r}
+ggplot(data, aes(x=Load.Factor,
+                 y=Avg.Probes.Successful.Search,
+                 color=Method)) +
+  geom_line() +
+  geom_point() +
+  labs(title="Successful Search Performance",
+       x="Load Factor (alpha)",
+       y="Average Probes") +
+  theme_minimal()
+```
+
+```{r}
+ggplot(data, aes(x=Load.Factor,
+                 y=Time.Unsuccessful.Search,
+                 color=Method)) +
+  geom_line() +
+  geom_point() +
+  labs(title="Unsuccessful Search Running Time",
+       x="Load Factor (alpha)",
+       y="Time (seconds)") +
+  theme_minimal()
+```
